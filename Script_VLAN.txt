@@ -1,0 +1,58 @@
+enable
+conf t
+
+! On commence par la création des VLAN
+vlan 1
+name VLAN1
+exit
+
+vlan 2
+name VLAN2
+exit
+
+vlan 3
+name VLAN3
+exit
+
+! Ensuite, on attribue une adresse IP à chaque VLAN
+interface vlan 1
+ip address 192.168.1.1 255.255.255.0
+no shut
+exit
+
+interface vlan 2
+ip address 192.168.2.1 255.255.255.0
+no shut
+exit
+
+interface vlan 3
+ip address 192.168.3.1 255.255.255.0
+no shut
+exit
+
+! Ensuite, nous devons configurer les ports auxquels chaque VLAN est associé
+! Admettons que nous ayons des périphériques à connecter aux ports Fa0/1 pour le VLAN1, Fa0/2 pour le VLAN2 et Fa0/3 pour le VLAN3
+interface Fa0/1-5
+switchport mode access
+switchport access vlan 1
+exit
+
+interface Fa0/6-10
+switchport mode access
+switchport access vlan 2
+exit
+
+interface Fa0/11-15
+switchport mode access
+switchport access vlan 3
+exit
+
+! Assurez-vous d'avoir une interface en mode trunk pour communiquer entre les VLAN, supposons que ce soit l'interface Gi0/1
+interface Gi0/1
+switchport mode trunk
+
+exit
+
+end
+write memory
+
